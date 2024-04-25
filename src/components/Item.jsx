@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Item(props) {
-  const { title, imageUrl, price, addToFav, isFav } = props;
+  const { title, imageUrl, price, addToFav, isFav, addToCart, isCart } = props;
 
   const handleFavClick = () => {
     addToFav({
@@ -17,6 +17,15 @@ export default function Item(props) {
       price,
     });
     toast.success("Added To Wishlist");
+  };
+
+  const handleCartClick = () => {
+    addToCart({
+      title,
+      imageUrl,
+      price,
+    });
+    toast.success("Added to Cart");
   };
 
   return (
@@ -55,7 +64,13 @@ export default function Item(props) {
           <h5 className="card-title">{title}</h5>
           <p className="card-text">$ {price}</p>
         </div>
-        <button className="btn btn-outline-dark m-2">Add To Cart</button>
+        <button
+          className="btn btn-outline-dark m-2"
+          onClick={handleCartClick}
+          disabled={isCart(imageUrl)}
+        >
+          {isCart(imageUrl) ? "Added To Cart" : "Add To Cart"}
+        </button>
       </div>
     </div>
   );

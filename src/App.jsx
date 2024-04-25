@@ -14,6 +14,21 @@ import OrderSection from "./components/OrderSection.jsx";
 
 export default function App() {
   const [fav, setFav] = useState([]);
+  const [cart, setCart] = useState([]);
+
+  const addToCart = (item) => {
+    const newCart = [...cart, item];
+    setCart(newCart);
+  };
+
+  const removeCartItem = (imageUrl) => {
+    const updateCart = cart.filter((cart) => cart.imageUrl !== imageUrl);
+    setCart(updateCart);
+  };
+
+  const isCart = (imageUrl) => {
+    return cart.some((cart) => cart.imageUrl === imageUrl);
+  };
 
   const addToFav = (product) => {
     const newFav = [...fav, product];
@@ -35,13 +50,27 @@ export default function App() {
           <Route
             exact
             path="/"
-            element={<Home addToFav={addToFav} isFav={isFav} />}
+            element={
+              <Home
+                addToFav={addToFav}
+                isFav={isFav}
+                addToCart={addToCart}
+                isCart={isCart}
+              />
+            }
           />
           <Route exact path="category" element={<Category />}>
             <Route
               exact
               path="all"
-              element={<Home addToFav={addToFav} isFav={isFav} />}
+              element={
+                <Home
+                  addToFav={addToFav}
+                  isFav={isFav}
+                  addToCart={addToCart}
+                  isCart={isCart}
+                />
+              }
             />
             <Route
               exact
@@ -52,6 +81,8 @@ export default function App() {
                   category="men's clothing"
                   addToFav={addToFav}
                   isFav={isFav}
+                  addToCart={addToCart}
+                  isCart={isCart}
                 />
               }
             />
@@ -64,6 +95,8 @@ export default function App() {
                   category="women's clothing"
                   addToFav={addToFav}
                   isFav={isFav}
+                  addToCart={addToCart}
+                  isCart={isCart}
                 />
               }
             />
@@ -76,6 +109,8 @@ export default function App() {
                   category="jewelery"
                   addToFav={addToFav}
                   isFav={isFav}
+                  addToCart={addToCart}
+                  isCart={isCart}
                 />
               }
             />
@@ -88,6 +123,8 @@ export default function App() {
                   category="electronics"
                   addToFav={addToFav}
                   isFav={isFav}
+                  addToCart={addToCart}
+                  isCart={isCart}
                 />
               }
             />
@@ -98,7 +135,13 @@ export default function App() {
             element={<MyWishlist fav={fav} removeFromFav={removeFromFav} />}
           />
           <Route exact path="/orders" element={<OrderSection />} />
-          <Route exact path="/cart" element={<CartSection />} />
+          <Route
+            exact
+            path="/cart"
+            element={
+              <CartSection cart={cart} removeCartItem={removeCartItem} />
+            }
+          />
         </Routes>
         <BottomBar />
       </Router>

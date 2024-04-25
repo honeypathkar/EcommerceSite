@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Item from "./Item";
 import Spinner from "./assest/Spinner";
-import NoPreview from "../Images/nopreview.png"
+import NoPreview from "../Images/nopreview.png";
 
 export default function Home(props) {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);
-  const {addToFav, isFav} = props;
+  const { addToFav, isFav, addToCart, isCart } = props;
 
   const fetchProducts = async () => {
     try {
@@ -48,6 +48,8 @@ export default function Home(props) {
                 price={element.price}
                 isFav={isFav}
                 addToFav={addToFav}
+                addToCart={addToCart}
+                isCart={isCart}
               />
             </div>
           ))}

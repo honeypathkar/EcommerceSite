@@ -6,7 +6,7 @@ import NoPreview from "../Images/nopreview.png";
 export default function CategoryItem(props) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { addToFav, isFav } = props;
+  const { addToFav, isFav, addToCart, isCart } = props;
 
   const fetchProducts = async () => {
     try {
@@ -46,6 +46,8 @@ export default function CategoryItem(props) {
                 price={product.price}
                 isFav={isFav}
                 addToFav={addToFav}
+                addToCart={addToCart}
+                isCart={isCart}
               />
             </div>
           ))}
