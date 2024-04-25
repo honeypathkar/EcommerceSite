@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+.navItem{
+    @apply flex items-center justify-center w-full cursor-pointer hover:scale-125 focus:text-white;
+}
+.tabItem{
+    @apply flex items-center justify-center w-full cursor-pointer hover:scale-125 focus:text-blue-400;
+}
+@tailwind utilities;
