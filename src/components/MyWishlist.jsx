@@ -2,13 +2,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import React from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Tooltip } from "@mui/material";
 
 export default function MyWishlist(props) {
   const { fav, removeFromFav } = props;
 
   const handleRemoveFromFav = (imageUrl) => {
     removeFromFav(imageUrl);
-    toast.success("Removed from WishList")
+    toast.success("Removed from WishList");
   };
 
   return (
@@ -25,12 +26,14 @@ export default function MyWishlist(props) {
               <div className="card">
                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                   <ul className="absolute top-2 right-2">
-                    <button
-                      className="navItem"
-                      onClick={() => handleRemoveFromFav(element.imageUrl)}
-                    >
-                      <DeleteIcon sx={{ fontSize: "30px", color: "red" }} />
-                    </button>
+                    <Tooltip title="Remove Product" placement="right">
+                      <button
+                        className="navItem"
+                        onClick={() => handleRemoveFromFav(element.imageUrl)}
+                      >
+                        <DeleteIcon sx={{ fontSize: "30px", color: "red" }} />
+                      </button>
+                    </Tooltip>
                   </ul>
                   <img
                     src={element.imageUrl}
@@ -42,9 +45,10 @@ export default function MyWishlist(props) {
                   <h5 className="card-title">{element.title}</h5>
                   <p className="card-text">$ {element.price}</p>
                 </div>
-                <button className="btn btn-outline-dark m-2">Add To Cart</button>
+                <button className="btn btn-outline-dark m-2">
+                  Add To Cart
+                </button>
               </div>
-              
             </div>
           ))}
         </div>

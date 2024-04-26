@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Item from "./Item";
 import Spinner from "./assest/Spinner";
-import NoPreview from "../Images/nopreview.png";
+// import NoPreview from "../Images/nopreview.png";
 
 export default function Home(props) {
   const [product, setProduct] = useState(null);
@@ -22,7 +22,7 @@ export default function Home(props) {
       setProduct(result);
       setLoading(false);
 
-      console.log(result);
+      // console.log(result);
       // Here, you can do further processing with the products, such as updating state in a React component
     } catch (error) {
       console.error("Error fetching products:", error);
