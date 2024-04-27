@@ -4,23 +4,41 @@ import { Tooltip } from "@mui/material";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddIcon from "@mui/icons-material/Add";
-import { Remove } from "@mui/icons-material";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 export default function CartSection(props) {
   const { cart, removeCartItem } = props;
-  // const [count, setCount] = useState(1);
-  // const [itemV, setItemV] = useState(cart.price);
 
   const handleRemoveCartItem = (imageUrl) => {
     removeCartItem(imageUrl);
     toast.success("Removed from Cart");
   };
-  // const handleIncrease = () => {
-  //   setCount(count + 1)
-  // }
 
-  const toatlValue = cart.reduce((acc, item) => acc + item.price, 0);
-  console.log(toatlValue);
+  const [itemCounts, setItemCounts] = useState(
+    cart.reduce((acc, item) => ({ ...acc, [item.imageUrl]: 1 }), {})
+  );
+
+  const handleIncrease = (imageUrl) => {
+    setItemCounts((prevCounts) => ({
+      ...prevCounts,
+      [imageUrl]: prevCounts[imageUrl] + 1,
+    }));
+  };
+
+  const handleDecrease = (imageUrl) => {
+    if (itemCounts[imageUrl] > 1) {
+      setItemCounts((prevCounts) => ({
+        ...prevCounts,
+        [imageUrl]: prevCounts[imageUrl] - 1,
+      }));
+    }
+  };
+
+  const totalValue = cart.reduce(
+    (acc, item) => acc + item.price * itemCounts[item.imageUrl],
+    0
+  );
+
   return (
     <>
       <div className="container">
@@ -30,14 +48,7 @@ export default function CartSection(props) {
             <h2 className="pt-10 text-4xl">No Item Yet</h2>
           </div>
         ) : (
-          <div>
-            <div className="bg-pink-100 p-4 flex justify-between">
-              <div className="flex">
-                <p className="text-xl pr-8">Total Value:</p>
-                <p className="text-xl">$ {toatlValue}</p>
-              </div>
-              <button className="px-4 btn btn-outline-dark">Order Now</button>
-            </div>
+          <div className="mb-28">
             <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
               {cart.map((element, index) => (
                 <div className="group relative" key={index}>
@@ -65,17 +76,28 @@ export default function CartSection(props) {
                     </div>
                     <div className="card-body">
                       <h5 className="card-title">{element.title}</h5>
-                      <p className="card-text">$ {element.price}</p>
+                      <p className="card-text">
+                        {itemCounts[element.imageUrl]} X ${element.price} ={" "}
+                        {element.price * itemCounts[element.imageUrl]}
+                      </p>
                     </div>
                     <div className="text-center">
-                      <button className="btn btn-outline-dark">
+                      <button
+                        className="btn btn-outline-dark"
+                        onClick={() => handleIncrease(element.imageUrl)}
+                        disabled={itemCounts[element.imageUrl] >= 10}
+                      >
                         <AddIcon />
                       </button>
                       <span className="text-xl p-2 m-2">
-                        1
+                        {itemCounts[element.imageUrl]}
                       </span>
-                      <button className="btn btn-outline-dark">
-                        <Remove />
+                      <button
+                        className="btn btn-outline-dark"
+                        onClick={() => handleDecrease(element.imageUrl)}
+                        disabled={itemCounts[element.imageUrl] < 2}
+                      >
+                        <RemoveIcon />
                       </button>
                     </div>
                     <button className="btn btn-outline-dark m-2">
@@ -84,6 +106,10 @@ export default function CartSection(props) {
                   </div>
                 </div>
               ))}
+            </div>
+            <div className="bg-pink-100 p-4 flex justify-between mt-5">
+              <span className="text-xl">Total Value: {Math.floor(totalValue)}</span>
+              <button className="px-4 btn btn-outline-dark">Order Now</button>
             </div>
           </div>
         )}
