@@ -11,6 +11,8 @@ import MyWishlist from "./components/MyWishlist.jsx";
 import Alert from "./components/assest/Alert.jsx";
 import CartSection from "./components/CartSection.jsx";
 import OrderSection from "./components/OrderSection.jsx";
+import Register from "./components/Register.jsx";
+import Login from "./components/Login.jsx";
 
 export default function App() {
   const [fav, setFav] = useState([]);
@@ -142,6 +144,8 @@ export default function App() {
               <CartSection cart={cart} removeCartItem={removeCartItem} />
             }
           />
+          <Route exact path="/register" element={<Register/>}/>
+          <Route exact path="/login"  element={<Login/>}/>
         </Routes>
         <BottomBar />
       </Router>

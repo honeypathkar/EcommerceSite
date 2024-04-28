@@ -42,7 +42,7 @@ export default function CartSection(props) {
 
   return (
     <>
-      <h1 className="pt-3 text-2xl text-center pb-2">My Cart Item </h1>
+      <h1 className="pt-3 text-2xl text-center pb-3 bg-gray-100">My Cart Item </h1>
       {cart.length === 0 ? (
         <div className=" text-center">
           <h2 className="pt-10 text-4xl">No Item Yet</h2>

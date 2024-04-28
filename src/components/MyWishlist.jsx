@@ -13,14 +13,14 @@ export default function MyWishlist(props) {
   };
 
   return (
-    <div className="container">
-      <h1 className="pt-3 text-2xl text-center">My Wishlist ❤</h1>
+    <div>
+      <h1 className="pt-3 text-2xl text-center bg-gray-100 pb-3">My Wishlist ❤</h1>
       {fav.length === 0 ? (
         <div className=" text-center">
           <h2 className="pt-10 text-4xl">No Item Yet</h2>
         </div>
       ) : (
-        <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 container">
           {fav.map((element, index) => (
             <div className="group relative" key={index}>
               <div className="card">

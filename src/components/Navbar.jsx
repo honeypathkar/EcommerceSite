@@ -5,7 +5,6 @@ import { Tooltip } from "@mui/material";
 import Logo from "../Images/logo.png";
 import { Link } from "react-router-dom";
 
-
 export default function Navbar() {
   return (
     <div>
@@ -15,7 +14,9 @@ export default function Navbar() {
         </Link>
         <div className="flex">
           <Tooltip title="My Account">
-            <AccountCircleIcon />
+            <Link to="/register">
+              <AccountCircleIcon />
+            </Link>
           </Tooltip>
           <Tooltip title="Dark Mode">
             <Brightness4 className="ml-[24px]" />
