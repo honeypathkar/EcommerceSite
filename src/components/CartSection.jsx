@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { Tooltip } from "@mui/material";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import { Link } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 
 export default function CartSection(props) {
-  const { cart, removeCartItem } = props;
+  const { cart, removeCartItem, handleClickOrder } = props;
 
   const handleRemoveCartItem = (imageUrl) => {
     removeCartItem(imageUrl);
@@ -42,7 +41,9 @@ export default function CartSection(props) {
 
   return (
     <>
-      <h1 className="pt-3 text-2xl text-center pb-3 bg-gray-100">My Cart Item </h1>
+      <h1 className="pt-3 text-2xl text-center pb-3 bg-gray-100">
+        My Cart Item{" "}
+      </h1>
       {cart.length === 0 ? (
         <div className=" text-center">
           <h2 className="pt-10 text-4xl">No Item Yet</h2>
@@ -90,7 +91,11 @@ export default function CartSection(props) {
                         </div>
                         <div className="flex items-center space-x-4">
                           <p className="text-sm">$ {element.price}</p>
-                          <button onClick={() => handleRemoveCartItem(element.imageUrl)}>
+                          <button
+                            onClick={() =>
+                              handleRemoveCartItem(element.imageUrl)
+                            }
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
@@ -133,9 +138,11 @@ export default function CartSection(props) {
                     {/* <p className="text-sm text-gray-700">including VAT</p> */}
                   </div>
                 </div>
-                <button className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600 mb-20">
-                  Check out
-                </button>
+                <Link to="/place-order">
+                  <button className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600 mb-20">
+                    Check out
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

@@ -12,16 +12,10 @@ export default function Navbar() {
         <Link to="/">
           <img src={Logo} alt="Brand Logo" className="h-6 w-auto" />
         </Link>
-        <div className="flex">
-          <Tooltip title="My Account">
-            <Link to="/register">
-              <AccountCircleIcon />
-            </Link>
-          </Tooltip>
-          <Tooltip title="Dark Mode">
-            <Brightness4 className="ml-[24px]" />
-          </Tooltip>
-        </div>
+
+        <Tooltip title="Dark Mode">
+          <Brightness4 className="ml-[24px]" />
+        </Tooltip>
       </header>
     </div>
   );
