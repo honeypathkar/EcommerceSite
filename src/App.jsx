@@ -16,24 +16,55 @@ import PlaceOrder from "./components/assest/PlaceOrder.jsx";
 export default function App() {
   const [fav, setFav] = useState([]);
   const [cart, setCart] = useState([]);
-  const [order, setOrder] = useState(null);
-
-
-  const handleClickOrder = () => {
-    setOrder([...cart]);
-    setCart([]);
-  };
-  console.log(order);
+  // const [order, setOrder] = useState(null);
+  const [itemCounts, setItemCounts] = useState({});
 
   const addToCart = (item) => {
     const newCart = [...cart, item];
     setCart(newCart);
+    setItemCounts((prevCounts) => ({
+      ...prevCounts,
+      [item.imageUrl]: (prevCounts[item.imageUrl] || 0) + 1,
+    }));
   };
 
   const removeCartItem = (imageUrl) => {
-    const updateCart = cart.filter((cart) => cart.imageUrl !== imageUrl);
-    setCart(updateCart);
+    const updatedCart = cart.filter((item) => item.imageUrl !== imageUrl);
+    setCart(updatedCart);
+    setItemCounts((prevCounts) => {
+      const updatedCounts = { ...prevCounts };
+      delete updatedCounts[imageUrl];
+      return updatedCounts;
+    });
   };
+
+  const handleIncrease = (imageUrl) => {
+    setItemCounts((prevCounts) => ({
+      ...prevCounts,
+      [imageUrl]: prevCounts[imageUrl] + 1,
+    }));
+  };
+
+  const handleDecrease = (imageUrl) => {
+    if (itemCounts[imageUrl] > 1) {
+      setItemCounts((prevCounts) => ({
+        ...prevCounts,
+        [imageUrl]: prevCounts[imageUrl] - 1,
+      }));
+    }
+  };
+
+  const totalValue = cart.reduce(
+    (acc, item) => acc + item.price * (itemCounts[item.imageUrl] || 1),
+    0
+  );
+
+  // const handleClickOrder = () => {
+  //   setOrder([...cart]);
+  //   setCart([]);
+  // };
+  // console.log(order);
+
 
   const isCart = (imageUrl) => {
     return cart.some((cart) => cart.imageUrl === imageUrl);
@@ -151,10 +182,18 @@ export default function App() {
               <CartSection
                 cart={cart}
                 removeCartItem={removeCartItem}
+                handleIncrease={handleIncrease}
+                handleDecrease={handleDecrease}
+                itemCounts={itemCounts}
+                totalValue={totalValue}
               />
             }
           />
-          <Route exact path="/place-order" element={<PlaceOrder />} />
+          <Route
+            exact
+            path="/place-order"
+            element={<PlaceOrder totalValue={totalValue} />}
+          />
         </Routes>
         <BottomBar />
       </Router>
