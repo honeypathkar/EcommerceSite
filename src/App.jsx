@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import BottomBar from "./components/BottomBar";
 import Home from "./components/Home";
@@ -12,12 +12,25 @@ import Alert from "./components/assest/Alert.jsx";
 import CartSection from "./components/CartSection.jsx";
 import OrderSection from "./components/OrderSection.jsx";
 import PlaceOrder from "./components/assest/PlaceOrder.jsx";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
   const [fav, setFav] = useState([]);
   const [cart, setCart] = useState([]);
-  // const [order, setOrder] = useState(null);
+  const [orders, setOrders] = useState([]);
   const [itemCounts, setItemCounts] = useState({});
+  const [orderValue, setOrderValue] = useState(0);
+  const [cartLength, setCartLength] = useState(0);
+
+  useEffect(() => {
+    // Calculate and update cart length based on item counts
+    const newCartLength = Object.values(itemCounts).reduce(
+      (acc, count) => acc + count,
+      0
+    );
+    setCartLength(newCartLength);
+  }, [itemCounts]);
 
   const addToCart = (item) => {
     const newCart = [...cart, item];
@@ -26,7 +39,9 @@ export default function App() {
       ...prevCounts,
       [item.imageUrl]: (prevCounts[item.imageUrl] || 0) + 1,
     }));
+    // setCartLength(newCart.length);
   };
+  console.log(cartLength);
 
   const removeCartItem = (imageUrl) => {
     const updatedCart = cart.filter((item) => item.imageUrl !== imageUrl);
@@ -36,6 +51,7 @@ export default function App() {
       delete updatedCounts[imageUrl];
       return updatedCounts;
     });
+    // setCartLength(updatedCart.length);
   };
 
   const handleIncrease = (imageUrl) => {
@@ -43,6 +59,7 @@ export default function App() {
       ...prevCounts,
       [imageUrl]: prevCounts[imageUrl] + 1,
     }));
+    // setCartLength(cart.length);
   };
 
   const handleDecrease = (imageUrl) => {
@@ -51,6 +68,7 @@ export default function App() {
         ...prevCounts,
         [imageUrl]: prevCounts[imageUrl] - 1,
       }));
+      // setCartLength(cartLength + itemCounts);
     }
   };
 
@@ -59,12 +77,21 @@ export default function App() {
     0
   );
 
-  // const handleClickOrder = () => {
-  //   setOrder([...cart]);
-  //   setCart([]);
-  // };
-  // console.log(order);
+  const handleClickOrder = () => {
+    const totalOrderValue = cart.reduce(
+      (acc, item) => acc + item.price * (itemCounts[item.imageUrl] || 1),
+      0
+    );
+    setOrders([...cart]); // Copy items to orders
+    setCart([]); // Clear the cart
+    setItemCounts({}); // Reset itemCounts to an empty object
+    setOrderValue(totalOrderValue); // Update totalValue in App component
+    setCartLength(0); // Reset cart length
+    toast.success("Order Placed");
+  };
+  
 
+  // console.log(order);
 
   const isCart = (imageUrl) => {
     return cart.some((cart) => cart.imageUrl === imageUrl);
@@ -174,7 +201,11 @@ export default function App() {
             path="/wishlist"
             element={<MyWishlist fav={fav} removeFromFav={removeFromFav} />}
           />
-          <Route exact path="/orders" element={<OrderSection />} />
+          <Route
+            exact
+            path="/orders"
+            element={<OrderSection orders={orders} orderValue={orderValue} />}
+          />
           <Route
             exact
             path="/cart"
@@ -192,10 +223,15 @@ export default function App() {
           <Route
             exact
             path="/place-order"
-            element={<PlaceOrder totalValue={totalValue} />}
+            element={
+              <PlaceOrder
+                totalValue={totalValue}
+                handleClickOrder={handleClickOrder}
+              />
+            }
           />
         </Routes>
-        <BottomBar />
+        <BottomBar cartLength={cartLength} />
       </Router>
     </div>
   );

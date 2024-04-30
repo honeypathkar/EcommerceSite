@@ -1,11 +1,12 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { Link } from "react-router-dom";
 
-export default function PlaceOrder({ totalValue }) {
+export default function PlaceOrder({ totalValue, handleClickOrder }) {
   const [payment, setPayment] = useState("");
 
   const handleChange = (event) => {
@@ -115,7 +116,9 @@ export default function PlaceOrder({ totalValue }) {
               <div class="grid grid-cols-2 gap-4">
                 <Box sx={{ minWidth: 120 }}>
                   <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Payment</InputLabel>
+                    <InputLabel id="demo-simple-select-label">
+                      Payment
+                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
@@ -131,12 +134,15 @@ export default function PlaceOrder({ totalValue }) {
                 </Box>
               </div>
               <div className="flex items-center p-6">
-                <button
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
-                  type="submit"
-                >
-                  Place Order
-                </button>
+                <Link to="/orders"> 
+                  <button
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
+                    type="submit"
+                    onClick={handleClickOrder}
+                  >
+                    Place Order
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

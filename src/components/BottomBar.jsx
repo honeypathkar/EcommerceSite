@@ -4,10 +4,11 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { ShoppingBagOutlined } from "@mui/icons-material";
 import { FavoriteBorderOutlined } from "@mui/icons-material";
 import { CategoryOutlined } from "@mui/icons-material";
-import "../App.css"
+import "../App.css";
 import { Link } from "react-router-dom";
+import { Badge } from "@mui/material";
 
-export default function BottomBar() {
+export default function BottomBar({cartLength}) {
   return (
     <div>
       <footer className="fixed bottom-0 left-0 z-50 w-full border-t border-[#d0d1d24d] bg-pink-400 -mb-5">
@@ -36,12 +37,14 @@ export default function BottomBar() {
             </Link>
             <span>My Wishlist</span>
           </li>
-          <li>
-            <Link className="navItem" to="/cart">
-              <ShoppingCartOutlinedIcon sx={{ fontSize: "30px" }} />
-            </Link>
-            <span>Cart</span>
-          </li>
+          <Badge badgeContent={cartLength} color="primary">
+            <li>
+              <Link className="navItem" to="/cart">
+                <ShoppingCartOutlinedIcon sx={{ fontSize: "30px" }} />
+              </Link>
+              <span>Cart</span>
+            </li>
+          </Badge>
         </ul>
       </footer>
     </div>
