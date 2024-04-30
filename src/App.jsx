@@ -89,7 +89,6 @@ export default function App() {
     setCartLength(0); // Reset cart length
     toast.success("Order Placed");
   };
-  
 
   // console.log(order);
 
@@ -199,7 +198,14 @@ export default function App() {
           <Route
             exact
             path="/wishlist"
-            element={<MyWishlist fav={fav} removeFromFav={removeFromFav} />}
+            element={
+              <MyWishlist
+                fav={fav}
+                removeFromFav={removeFromFav}
+                addToCart={addToCart}
+                isCart={isCart}
+              />
+            }
           />
           <Route
             exact
