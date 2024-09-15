@@ -82,7 +82,8 @@ export default function App() {
       (acc, item) => acc + item.price * (itemCounts[item.imageUrl] || 1),
       0
     );
-    setOrders([...cart]); // Copy items to orders
+
+    setOrders((prevOrders) => [...prevOrders, ...cart]); // Append new cart items to the previous orders
     setCart([]); // Clear the cart
     setItemCounts({}); // Reset itemCounts to an empty object
     setOrderValue(totalOrderValue); // Update totalValue in App component

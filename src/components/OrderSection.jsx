@@ -20,17 +20,9 @@ export default function OrderSection({ orders, orderValue }) {
               similar products.
             </p>
             <div className="mt-4">
-              <div className="flex justify-between items-center border-b pb-2">
+              <div className="items-end text-end border-b pb-2">
                 <div>
-                  <h2 className="font-semibold">Order number</h2>
-                  <p>#FFGHJO1</p>
-                </div>
-                <div>
-                  <h2 className="font-semibold">Date placed</h2>
-                  <p>30 april</p>
-                </div>
-                <div>
-                  <h2 className="font-semibold">Total amount</h2>
+                  <h2 className="font-semibold text-end">Total amount</h2>
                   <p>$ {Math.floor(orderValue) + 4.99}</p>
                 </div>
               </div>
