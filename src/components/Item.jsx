@@ -6,9 +6,20 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { toast } from "react-toastify";
 // import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import "react-toastify/dist/ReactToastify.css";
+import StarIcon from "@mui/icons-material/Star";
 
 export default function Item(props) {
-  const { title, imageUrl, price, addToFav, isFav, addToCart, isCart } = props;
+  const {
+    title,
+    imageUrl,
+    price,
+    addToFav,
+    isFav,
+    addToCart,
+    isCart,
+    rating,
+    userCount,
+  } = props;
 
   const handleFavClick = () => {
     addToFav({
@@ -62,6 +73,18 @@ export default function Item(props) {
         </div>
         <div className="card-body">
           <h5 className="card-title">{title}</h5>
+          <div className="flex items-center">
+            <div
+              className={`flex items-center text-sm ${
+                rating >= 4 ? "bg-green-600" : "bg-yellow-500"
+              } px-1 rounded-sm mb-1`}
+              style={{ maxWidth: "max-content" }}
+            >
+              <span className="mr-1 text-white">{rating}</span>
+              <StarIcon sx={{ fontSize: "14px", color: "white" }} />
+            </div>
+            <p className="pl-2">({userCount})</p>
+          </div>
           <p className="card-text">$ {price}</p>
         </div>
         <button

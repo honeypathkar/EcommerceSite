@@ -45,6 +45,8 @@ export default function Home(props) {
                 title={element.title}
                 imageUrl={element.image}
                 description={element.description}
+                rating={element.rating.rate}
+                userCount={element.rating.count}
                 price={element.price}
                 isFav={isFav}
                 addToFav={addToFav}
