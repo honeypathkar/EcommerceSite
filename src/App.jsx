@@ -14,6 +14,7 @@ import OrderSection from "./components/OrderSection.jsx";
 import PlaceOrder from "./components/assest/PlaceOrder.jsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { v4 as uuidv4 } from "uuid";
 
 export default function App() {
   const [fav, setFav] = useState([]);
@@ -83,7 +84,13 @@ export default function App() {
       0
     );
 
-    setOrders((prevOrders) => [...prevOrders, ...cart]); // Append new cart items to the previous orders
+    const newOrders = cart.map((item) => ({
+      ...item,
+      orderId: uuidv4(), // Generate a unique order ID
+      timestamp: new Date().toLocaleString(), // Add the current timestamp
+    }));
+
+    setOrders((prevOrders) => [...prevOrders, ...newOrders]); // Append new cart items with IDs and timestamps to the orders
     setCart([]); // Clear the cart
     setItemCounts({}); // Reset itemCounts to an empty object
     setOrderValue(totalOrderValue); // Update totalValue in App component
@@ -91,7 +98,7 @@ export default function App() {
     toast.success("Order Placed");
   };
 
-  // console.log(order);
+  console.log(orders);
 
   const isCart = (imageUrl) => {
     return cart.some((cart) => cart.imageUrl === imageUrl);

@@ -35,6 +35,12 @@ export default function OrderSection({ orders, orderValue }) {
                   />
                   <div className="flex-1">
                     <h3 className="text-lg font-semibold">{item.title}</h3>
+                    <p className="text-sm text-gray-500">
+                      Order ID: {item.orderId}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Date: {item.timestamp}
+                    </p>
                   </div>
                   <div className="text-right">
                     <p className="text-lg font-semibold">$ {item.price}</p>
