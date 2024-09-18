@@ -4,7 +4,7 @@ import "../../App.css"; // Import CSS file for styling
 
 export default function Spinner() {
   return (
-    <div className="spinner-container">
+    <div className="flex justify-center items-center">
       {" "}
       {/* Add a className for styling */}
       <img src={Loader} alt="Loading..." />{" "}
