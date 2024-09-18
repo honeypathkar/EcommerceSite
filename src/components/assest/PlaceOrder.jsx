@@ -1,17 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function PlaceOrder({ totalValue, handleClickOrder }) {
   const [payment, setPayment] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [warnings, setWarnings] = useState({
+    name: false,
+    email: false,
+    address: false,
+  });
+
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     setPayment(event.target.value);
   };
+
+  useEffect(() => {
+    if (name && email && address) {
+      setIsButtonDisabled(false);
+    } else {
+      setIsButtonDisabled(true);
+    }
+  }, [name, email, address]);
+
+  const validateForm = () => {
+    const newWarnings = {
+      name: !name,
+      email: !email,
+      address: !address,
+    };
+    setWarnings(newWarnings);
+
+    return name && email && address;
+  };
+
+  const handleSubmit = () => {
+    if (validateForm()) {
+      handleClickOrder(); // Call the order function if form is valid
+      navigate("/orders", { replace: true }); // Redirect to the orders page
+    }
+  };
+
   return (
     <div>
       <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto py-12 px-4">
@@ -72,48 +110,71 @@ export default function PlaceOrder({ totalValue, handleClickOrder }) {
                 <div className="space-y-2">
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="name"
+                    htmlFor="name"
                   >
                     Name
                   </label>
                   <input
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className={`flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+                      warnings.name ? "border-red-500" : "border-input"
+                    }`}
                     id="name"
                     placeholder="John Doe"
-                    required=""
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
                   />
+                  {warnings.name && (
+                    <p className="text-red-500 text-xs">Name is required</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="email"
+                    htmlFor="email"
                   >
                     Email
                   </label>
                   <input
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className={`flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+                      warnings.email ? "border-red-500" : "border-input"
+                    }`}
                     id="email"
                     placeholder="john@example.com"
-                    required=""
                     type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                   />
+                  {warnings.email && (
+                    <p className="text-red-500 text-xs">Email is required</p>
+                  )}
                 </div>
               </div>
               <div className="space-y-2">
                 <label
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  for="address"
+                  htmlFor="address"
                 >
                   Shipping Address
                 </label>
                 <textarea
-                  className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className={`flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+                    warnings.address ? "border-red-500" : "border-input"
+                  }`}
                   id="address"
                   placeholder="123 Main St, Anytown USA"
-                  required=""
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  required
                 ></textarea>
+                {warnings.address && (
+                  <p className="text-red-500 text-xs">
+                    Shipping address is required
+                  </p>
+                )}
               </div>
-              <div class="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <Box sx={{ minWidth: 120 }}>
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">
@@ -126,23 +187,22 @@ export default function PlaceOrder({ totalValue, handleClickOrder }) {
                       label="Payment"
                       onChange={handleChange}
                     >
-                      <MenuItem value="Gp">Google Pay</MenuItem>
-                      <MenuItem value="cc">Credit Card</MenuItem>
+                      <MenuItem value="cod">Cash On Delivery</MenuItem>
+                      <MenuItem value="gp">Google Pay</MenuItem>
                       <MenuItem value="pp">Phone Pay</MenuItem>
                     </Select>
                   </FormControl>
                 </Box>
               </div>
               <div className="flex items-center p-6">
-                <Link to="/orders"> 
-                  <button
-                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
-                    type="submit"
-                    onClick={handleClickOrder}
-                  >
-                    Place Order
-                  </button>
-                </Link>
+                <button
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
+                  type="submit"
+                  onClick={handleSubmit}
+                  disabled={isButtonDisabled}
+                >
+                  Place Order
+                </button>
               </div>
             </div>
           </div>
