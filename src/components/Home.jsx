@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Item from "./Item";
 import Spinner from "./assest/Spinner";
-// import NoPreview from "../Images/nopreview.png";
 
 export default function Home(props) {
-  const [product, setProduct] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const { addToFav, isFav, addToCart, isCart } = props;
 
   const fetchProducts = async () => {
@@ -19,13 +20,12 @@ export default function Home(props) {
       }
 
       const result = await response.json();
-      setProduct(result);
+      setProducts(result);
+      setFilteredProducts(result);
       setLoading(false);
-
-      // console.log(result);
-      // Here, you can do further processing with the products, such as updating state in a React component
     } catch (error) {
       console.error("Error fetching products:", error);
+      setLoading(false);
     }
   };
 
@@ -33,13 +33,33 @@ export default function Home(props) {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    if (searchTerm) {
+      setFilteredProducts(
+        products.filter((product) =>
+          product.title.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredProducts(products);
+    }
+  }, [searchTerm, products]);
+
   return (
     <div className="container mb-20">
+      <div className="mt-6 mb-4">
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border p-2 w-full"
+        />
+      </div>
       <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
         {loading && <Spinner />}
         {!loading &&
-          product !== null &&
-          product.map((element) => (
+          filteredProducts.map((element) => (
             <div key={element.id}>
               <Item
                 title={element.title}
