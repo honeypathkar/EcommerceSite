@@ -17,21 +17,49 @@ import "react-toastify/dist/ReactToastify.css";
 import { v4 as uuidv4 } from "uuid";
 
 export default function App() {
-  const [fav, setFav] = useState([]);
-  const [cart, setCart] = useState([]);
-  const [orders, setOrders] = useState([]);
-  const [itemCounts, setItemCounts] = useState({});
-  const [orderValue, setOrderValue] = useState(0);
+  const [fav, setFav] = useState(() => {
+    const savedFav = localStorage.getItem("fav");
+    return savedFav ? JSON.parse(savedFav) : [];
+  });
+
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem("cart");
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  const [orders, setOrders] = useState(() => {
+    const savedOrders = localStorage.getItem("orders");
+    return savedOrders ? JSON.parse(savedOrders) : [];
+  });
+
+  const [itemCounts, setItemCounts] = useState(() => {
+    const savedItemCounts = localStorage.getItem("itemCounts");
+    return savedItemCounts ? JSON.parse(savedItemCounts) : {};
+  });
+
+  const [orderValue, setOrderValue] = useState(() => {
+    const savedOrderValue = localStorage.getItem("orderValue");
+    return savedOrderValue ? parseFloat(savedOrderValue) : 0;
+  });
   const [cartLength, setCartLength] = useState(0);
 
+  // Effect to update cart length
   useEffect(() => {
-    // Calculate and update cart length based on item counts
     const newCartLength = Object.values(itemCounts).reduce(
       (acc, count) => acc + count,
       0
     );
     setCartLength(newCartLength);
   }, [itemCounts]);
+
+  // Effect to sync `fav`, `cart`, `orders`, and `itemCounts` with localStorage
+  useEffect(() => {
+    localStorage.setItem("fav", JSON.stringify(fav));
+    localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem("orders", JSON.stringify(orders));
+    localStorage.setItem("itemCounts", JSON.stringify(itemCounts));
+    localStorage.setItem("orderValue", JSON.stringify(orderValue));
+  }, [fav, cart, orders, itemCounts, orderValue]);
 
   const addToCart = (item) => {
     const newCart = [...cart, item];
@@ -40,9 +68,7 @@ export default function App() {
       ...prevCounts,
       [item.imageUrl]: (prevCounts[item.imageUrl] || 0) + 1,
     }));
-    // setCartLength(newCart.length);
   };
-  console.log(cartLength);
 
   const removeCartItem = (imageUrl) => {
     const updatedCart = cart.filter((item) => item.imageUrl !== imageUrl);
@@ -52,7 +78,6 @@ export default function App() {
       delete updatedCounts[imageUrl];
       return updatedCounts;
     });
-    // setCartLength(updatedCart.length);
   };
 
   const handleIncrease = (imageUrl) => {
@@ -60,7 +85,6 @@ export default function App() {
       ...prevCounts,
       [imageUrl]: prevCounts[imageUrl] + 1,
     }));
-    // setCartLength(cart.length);
   };
 
   const handleDecrease = (imageUrl) => {
@@ -69,7 +93,6 @@ export default function App() {
         ...prevCounts,
         [imageUrl]: prevCounts[imageUrl] - 1,
       }));
-      // setCartLength(cartLength + itemCounts);
     }
   };
 
@@ -83,35 +106,34 @@ export default function App() {
       (acc, item) => acc + item.price * (itemCounts[item.imageUrl] || 1),
       0
     );
-
     const newOrders = cart.map((item) => ({
       ...item,
-      orderId: uuidv4(), // Generate a unique order ID
-      timestamp: new Date().toLocaleString(), // Add the current timestamp
+      orderId: uuidv4(),
+      timestamp: new Date().toLocaleString(),
     }));
 
-    setOrders((prevOrders) => [...prevOrders, ...newOrders]); // Append new cart items with IDs and timestamps to the orders
-    setCart([]); // Clear the cart
-    setItemCounts({}); // Reset itemCounts to an empty object
-    setOrderValue(totalOrderValue); // Update totalValue in App component
-    setCartLength(0); // Reset cart length
+    setOrders((prevOrders) => [...prevOrders, ...newOrders]);
+    setCart([]);
+    setItemCounts({});
+    setOrderValue(totalOrderValue);
+    setCartLength(0);
     toast.success("Order Placed");
-  };
-
-  console.log(orders);
-
-  const isCart = (imageUrl) => {
-    return cart.some((cart) => cart.imageUrl === imageUrl);
   };
 
   const addToFav = (product) => {
     const newFav = [...fav, product];
     setFav(newFav);
   };
+
   const removeFromFav = (imageUrl) => {
     const updatedFav = fav.filter((fav) => fav.imageUrl !== imageUrl);
     setFav(updatedFav);
   };
+
+  const isCart = (imageUrl) => {
+    return cart.some((cart) => cart.imageUrl === imageUrl);
+  };
+
   const isFav = (imageUrl) => {
     return fav.some((fav) => fav.imageUrl === imageUrl);
   };
