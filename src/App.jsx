@@ -15,6 +15,8 @@ import PlaceOrder from "./components/assest/PlaceOrder.jsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { v4 as uuidv4 } from "uuid";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 export default function App() {
   const [fav, setFav] = useState(() => {
@@ -137,6 +139,43 @@ export default function App() {
   const isFav = (imageUrl) => {
     return fav.some((fav) => fav.imageUrl === imageUrl);
   };
+
+  // Handle Cancel Order
+  const handleCancelOrder = (orderId) => {
+    const orderToCancel = orders.find((order) => order.orderId === orderId);
+
+    if (orderToCancel) {
+      confirmAlert({
+        title: "Cancel Order",
+        message: "Are you sure you want to cancel this order?",
+        buttons: [
+          {
+            label: "Yes",
+            onClick: () => {
+              // Update orders list by removing the canceled order
+              const updatedOrders = orders.filter(
+                (order) => order.orderId !== orderId
+              );
+
+              // Subtract the price of the canceled order from the order value
+              const updatedOrderValue = orderValue - orderToCancel.price;
+
+              // Update state
+              setOrders(updatedOrders);
+              setOrderValue(updatedOrderValue);
+
+              // Show success message
+              toast.success("Order cancelled successfully");
+            },
+          },
+          {
+            label: "No",
+          },
+        ],
+      });
+    }
+  };
+
   return (
     <div>
       <Router>
@@ -240,7 +279,13 @@ export default function App() {
           <Route
             exact
             path="/orders"
-            element={<OrderSection orders={orders} orderValue={orderValue} />}
+            element={
+              <OrderSection
+                orders={orders}
+                orderValue={orderValue}
+                handleCancelOrder={handleCancelOrder}
+              />
+            }
           />
           <Route
             exact

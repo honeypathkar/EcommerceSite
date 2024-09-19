@@ -1,6 +1,10 @@
 import React from "react";
 
-export default function OrderSection({ orders, orderValue }) {
+export default function OrderSection({
+  orders,
+  orderValue,
+  handleCancelOrder,
+}) {
   return (
     <>
       <h1 className="pt-3 text-2xl text-center pb-3 bg-gray-100">
@@ -44,6 +48,12 @@ export default function OrderSection({ orders, orderValue }) {
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-semibold">$ {item.price}</p>
+                  <button
+                    onClick={() => handleCancelOrder(item.orderId)}
+                    className="btn-outline-danger btn"
+                  >
+                    Cancel Order
+                  </button>
                 </div>
               </div>
             ))}
